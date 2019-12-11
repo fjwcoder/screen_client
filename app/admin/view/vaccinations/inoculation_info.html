@@ -1,0 +1,382 @@
+<link rel="stylesheet" href="__STATIC__/module/admin/css/all.css">
+<div id="content-container">
+
+            <!-- 面包屑header -->
+            <div class="wp99">
+                <div class="big_box">
+                    <div class="btn_box">
+                        <!-- <button class="btn btn_item btn_item_left submit" State="3">完成，留观</button> -->
+                        <button class="btn btn_item btn_item_left submit" data="1" State="4">完成</button>
+                        <button class="btn btn_item btn_item_left submit" data="2" State="4">完成并呼叫下一位</button>
+                        <!-- <button class="btn btn_item btn_item_left submit_next">完成并呼叫下一位</button> -->
+                        <button class="btn btn_item btn_item_left call_number">呼叫</button>
+
+                        <div class="un_number">{$info.registerInfo.Number}号</div>
+
+                        <!-- <div class="input_box">
+                            <input type="text" class="_input" placeholder="请输入编号">
+                            <div class="input_btn">跳转</div>
+                        </div> -->
+                        <button class="btn btn_item btn_item_right next_number">下一位</button>
+                        <button class="btn btn_item btn_item_right prev_number">上一位</button>
+                        <div class="un_writingdesk"></div>
+                    </div>
+                    <div class="center_box">
+                        <div class="cen_left">
+                            <div class="cen_title"> 儿童信息</div>
+                            <div class="form_box">
+                                <form class="layui-form" action="" id="form">
+                                    <div class="form_left">
+                                        <input type="hidden" name="Id" value="{$info.registerInfo.Id}">
+
+                                        <input type="hidden" name="ConsultationRoom">
+
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="color:#666">卡号：</label>
+                                            <div class="layui-input-block">
+                                                <input class="layui-input" name="CardNo" value="{$info.childInfo.CardNo}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="color:#666">姓名：</label>
+                                            <div class="layui-input-block">
+                                                <input class="layui-input" name="Name" value="{$info.childInfo.Name}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="color:#666">出生日期：</label>
+                                            <div class="layui-input-block">
+                                                <input class="layui-input" name="BirthDate" value="{$info.childInfo.BirthDate}" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form_right">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="color:#666">家长：</label>
+                                            <div class="layui-input-block">
+                                                <input class="layui-input" name="ParentName" value="{$info.childInfo.ParentName}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="color:#666">电话：</label>
+                                            <div class="layui-input-block">
+                                                <input class="layui-input" name="Mobile" value="{$info.childInfo.Mobile}" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label" style="color:#666">性别：</label>
+                                            <div class="layui-input-block">
+                                                {if condition="$info['childInfo']['Sex'] == 1"}
+                                                <input type="text" class="layui-input" disabled value="男">
+                                                {elseif condition="$info['childInfo']['Sex'] == 2"}
+                                                <input type="text" class="layui-input" disabled value="女">
+                                                {/if}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form_bottom">
+                                        <div class="layui-form-item layui-form-text">
+                                            <label class="layui-form-label" style="color:#666">家庭住址：</label>
+                                            <div class="layui-input-block">
+                                                <textarea class="layui-textarea" name="Address" disabled>{$info.childInfo.Address}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="cen_right">
+                            <div class="cen_title"> 采集信息</div>
+                            <div class="icon_box">
+                                <div class="icon_text">头像</div>
+                                {empty name="info['head_fingerprint_path']['head.JPG']"}
+                                <i class="iconfont icon-xingzhuanggongnengtubiao-" style="font-size: 150px;line-height: 150px;"></i>
+                                {else/}
+                                <img src="{$info['head_fingerprint_path']['head.JPG']}">
+                                {/empty}
+                            </div>
+                            <div class="icon_box">
+                                <div class="icon_text">指纹</div>
+                                {empty name="info['head_fingerprint_path']['fingerprint.JPG']"}
+                                <i class="iconfont icon-fingerprint__" style="font-size: 100px;line-height: 150px;"></i>
+                                {else/}
+                                <img src="{$info['head_fingerprint_path']['fingerprint.JPG']}">
+                                {/empty}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="today_box">
+                        <div class="cen_title"> <span>今日接种疫苗</span>
+                            <!-- <button class="btn btn_item btn_item_right add_vaccination">添加</button> -->
+                        </div>
+                        <table class="layui-table" id="test">
+                            <thead>
+                                <tr>
+                                    <th>接种疫苗</th>
+                                    <th>剂次</th>
+                                    <th>疫苗批号</th>
+                                    <th>生产企业</th>
+                                    <th>接种部位</th>
+                                    <!-- <th>接种地址</th> -->
+                                    <th>免费</th>
+                                </tr> 
+                            </thead>
+                            <tbody>
+                                {volist name="info.todayInjectList" id="vo"}
+                                <tr>
+                                    <td>{$vo.ShortName}</td>
+                                    <td>{$vo.Times}</td>
+                                    <td>{$vo.LotNumber}</td>
+                                    <td>{$vo.Company}</td>
+                                    <td>{$vo.VaccinationPosition}</td>
+                                    <!-- <td>{$vo.VaccinationPlace}</td> -->
+                                    <td>
+                                        {if condition="$vo['IsFree'] == 1"}
+                                        <input type="checkbox" lay-skin="primary" checked disabled>
+                                        {else}
+                                        <input type="checkbox" lay-skin="primary" disabled>
+                                        {/if}
+                                    </td>
+                                </tr>
+                                {/volist}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="today_box">
+                        <div class="cen_title"> <span>历史接种疫苗</span> </div>
+                        <table class="layui-hide" id="test1"></table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="fix_box">
+        <!-- <div class="j_item">
+            <div class="j_item_title">登记台</div>
+            <div class="j_item_number">1</div>
+        </div>
+        <div class="j_item">
+            <div class="j_item_title">登记台</div>
+            <div class="j_item_number">2</div>
+        </div> -->
+    </div>
+    <div id="black"></div>
+    <script>
+        var ChildId = '';
+        var VaccinationDesk = '{$info["VaccinationDesk"]|default=""}';
+        console.log(VaccinationDesk)
+        var VaccinationId={$info.registerInfo.Id};
+        layui.use(['jquery', 'layer','table','laydate'], function(){
+            var table = layui.table,
+            layer = layui.layer,
+            laydate= layui.laydate,
+            $ = layui.jquery;
+
+            if(VaccinationDesk == '' || VaccinationDesk == null){
+                // 显示接种台
+                $(document).ready(function () {
+                    $("#black").css('display', "block");
+                    $(".fix_box").css('display', "block");
+                    var a = {$info.vaccinationDeskCount};
+                    // a = 登记台个数
+                    var num = a * 210 / 2;
+                    var j_html = '';
+                    for ( i = 0; i < a; i++) {
+                        // console.log(i)
+                        j_html += '<div class="j_item" data='+ (i+1) +'><div class="j_item_title">接种台</div><div class="j_item_number">'+ (i+1) +'</div></div>';
+                        
+                    }
+                    $('.fix_box').html(j_html);
+                    $(".fix_box").css('left', 'calc(50% - ' + num + 'px)')
+                });
+                // 选中接种台
+                $('.j_item').on('click',function(e){
+                    VaccinationDesk = e.currentTarget.attributes.data.value;
+                    var Number = '{$info.registerInfo.Number}';
+                    var Name = $('input[name="Name"]').val();
+
+                    var data = {
+                        Number:Number,
+                        Name:Name,
+                        WritingDesk:VaccinationDesk,
+                    };
+                    
+                    // console.log(VaccinationDesk)
+                    $('input[name="ConsultationRoom"]').val(VaccinationDesk);
+                    $('.fix_box').hide();
+                    $('#black').hide();
+                    $('.un_number').show();
+                    $('.un_writingdesk').text('接种台'+VaccinationDesk);
+                    $('.un_writingdesk').show();
+                    $.post('{:url("vaccinations/setCacheVaccinationDesk")}',data,function(res){
+                        if(res.code == 200){
+                            layer.msg(res.msg,{icon:1});
+                        }else{
+                            layer.msg(res.msg,{icon:2});
+                        }
+                        // console.log('VaccinationDesk写入缓存');
+                    })
+                });
+            }else{
+                $('input[name="ConsultationRoom"]').val(VaccinationDesk);
+                $('.fix_box').hide();
+                $('#black').hide();
+                $('.un_number').show();
+                $('.un_writingdesk').text('接种台'+VaccinationDesk);
+                $('.un_writingdesk').show();
+            }
+
+            
+            
+            
+            
+
+            table.render({
+                elem: '#test1'
+                ,url:'{:url("childvaccines/getChildvaccines")}'
+                ,cellMinWidth: 80 //全局定义常规单元格的最小宽度
+                ,where:{
+                    ChildId:ChildId
+                }
+                ,cols: [[
+                    {field:'FullName', title: '接种疫苗', }
+                    ,{field:'Times', title: '剂次'} 
+                    ,{field:'LotNumber', title: '疫苗批号',  }
+                    ,{field:'Company', title: '生产企业'}
+                    ,{field:'VaccinationPosition', title: '接种部位'}
+                    // ,{field:'VaccinationPlace', title: '接种地址', align: 'center'} 
+                    ,{title: '免费',   align: 'center',templet:function(d){
+                        if(d.IsFree == 0){
+                            return '收费';
+                        }else{
+                            return '免费'
+                        }
+
+                    }} 
+                ]],
+                parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                    return {
+                        'code':0,
+                        'count':res.length,
+                        'data': res
+                    };
+                },
+            });
+
+
+            // 点击下一个按钮
+            $('.next_number').on('click',function(){
+                var data = {
+                    Id:{$info.registerInfo.Id},
+                    State:1,
+                };
+
+                $.post('{:url("vaccinations/nextNumber")}',data,function(res){
+                    if(res.code == 200){
+                        window.location.href = "{:url()}?Id="+res.msg;
+
+                    }else{
+                        layer.msg(res.msg,{icon:2});
+                    }
+                });
+
+            });
+
+            // 点击上一个按钮
+            $('.prev_number').on('click',function(){
+                var data = {
+                    Id:{$info.registerInfo.Id},
+                    State:1,
+                };
+
+                $.post('{:url("vaccinations/prevNumber")}',data,function(res){
+                    if(res.code == 200){
+                        window.location.href = "{:url()}?Id="+res.msg;
+
+                    }else{
+                        layer.msg(res.msg,{icon:2});
+                    }
+                });
+
+            });
+
+            /**
+            * 呼叫
+            */
+            $('.call_number').on('click',function(){
+                // var Id  = $('input[name="Id"]').val();
+                var Number = '{$info.registerInfo.Number}';
+                var Name = $('input[name="Name"]').val();
+
+                var data = {
+                    Number:Number,
+                    Name:Name,
+                    WritingDesk:VaccinationDesk,
+                };
+
+                $.post('{:url("Vaccinations/callInjectNumber")}',data,function(res){
+                    // console.log(res);
+                    if(res.code == 200){
+                        layer.msg(res.msg,{icon:1});
+                    }else{
+                        layer.msg(res.msg,{icon:2});
+                    }
+                });
+            });
+
+
+            // 点击完成 / 完成并下一位 按钮
+            $('.submit').on('click',function(){
+                // var noNext = $(this).attr('data');
+                $('.fakeloader').show();
+                var ConsultationRoom = $('input[name="ConsultationRoom"]').val();
+                var Id = $('input[name="Id"]').val();
+                // var State = $(this).attr('State');
+                var status = $(this).attr('data');
+
+                data = {
+                    Id:Id,
+                    VaccinationUserId:'{$member_info.Id}',
+                    status:status,
+                    ConsultationRoom:ConsultationRoom,
+                    // noNext:noNext
+                };
+
+                layer.confirm("确定要完成吗？建议接种台完成!!!", {icon: 3, title:'提示'}, function(index){
+                
+                    // $.post('{:url("Vaccinations/setInjectVaccineComplete")}',data,function(res){
+                    $.post('/api.php/Vaccinations/completeInject',data,function(res){
+                        // console.log(res)
+                        // return false
+                        if(res.code == 44444){
+                            layer.msg('接种成功，没有下一个了!',{icon:1});
+                            $('.fakeloader').hide();
+                            layer.close(index);
+                        }else if(res.code == 200){
+                            if(status == 2){
+                                layer.msg(res.msg,{icon:1});
+                                setTimeout('window.location.href = "{:url()}?Id='+res.data.Id+'"', 500);
+                                return false;
+                            }
+                            $('.fakeloader').hide();
+                            layer.msg(res.msg,{icon:1});
+                            layer.close(index);
+                        }else{
+                            $('.fakeloader').hide();
+                            layer.msg(res.msg,{icon:2});
+                            layer.close(index);
+                        }
+                    });
+                });
+
+                $('.fakeloader').hide();
+
+               
+            });
+
+
+        });
+
+
+    </script>

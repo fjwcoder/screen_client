@@ -1,0 +1,153 @@
+<script src='http://cdn.bootcss.com/socket.io/1.3.7/socket.io.js'></script>
+
+<style>
+    ul,
+    li {
+        list-style-type: none;
+    }
+    
+    .all-screen {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    
+    .ul-panel {
+        padding: 0 40px;
+        margin: 8px;
+        width: 60%;
+        float: left;
+    }
+    
+    .ul-panel li {
+        text-align: center;
+        border-bottom: 2px solid rgb(236, 229, 229);
+        font-size: 35px;
+        font-weight: 500;
+        color: rgb(255, 0, 0);
+        overflow: hidden;
+    }
+    
+    .ul-panel li p {
+        margin: 0;
+    }
+    
+    .new-li {
+        font-size: 45px!important;
+    }
+</style>
+</head>
+
+<body class="all-screen">
+<ul id="ul-panel" class="ul-panel">
+
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+
+</ul>
+
+<div class="video-panel" style="width: 40%; float: right;">
+        <video id="myVedio" width="320" height="240" autoplay="autoplay" controls>
+                <source src="/Volumes/QQ404678606/vsfile/154564453258689.mp4" type="video/mp4">
+                <source src="/Volumes/QQ404678606/vsfile/154564453258689.mp4" type="video/ogg">
+                您的浏览器不支持Video标签。
+        </video>
+</div>
+
+
+</body>
+
+<!-- 视频播放 -->
+<script>
+    var myVideo = document.getElementById("myVedio"); //通过js获取到vedio标签实例
+    var vedioLi = document.getElementsByTagName("li"); //获取视频列表
+    
+    var vedioArry = {$video_list}; //设置播放视频列表数组
+    var arryNumber = 0; //设置默认播放位置，方便后面循环播放
+    console.log(vedioArry);
+
+    myVideo.addEventListener("ended", function() {//为vedio添加ended监听，当视频播放完毕后执行对应函数
+        if(arryNumber == (vedioArry.length - 1)){ //判断是否到了最后一个视频
+            vedioLi[vedioLi.length - 1].style.backgroundColor = "black"; //将前一个列表颜色设为black
+            vedioLi[0].style.backgroundColor = "darkgray"; //将当前视频设置为灰白
+            myVideo.src = "video/"+vedioArry[0]; //播放第一个视频
+            myVideo.play();
+            arryNumber = 0;//将下标重设为 0
+        }else{
+            arryNumber += 1; //每播放一次则将下标加一
+            myVideo.src = "video/" + vedioArry[arryNumber];
+            vedioLi[arryNumber].style.backgroundColor = "darkgray";
+            vedioLi[arryNumber - 1].style.backgroundColor = "black";
+            myVideo.play();
+        }
+ 
+    });
+
+
+</script>
+<script>
+//后台获取配置信息
+var config = {$config};
+
+//////////////////////// layout 动态数据 ////////////////////////////////
+var screen_width = document.body.offsetWidth; // 屏幕显示区域宽度
+var screen_height = document.body.offsetHeight; // 屏幕显示区域高度
+var li_height = Math.floor(screen_height / config.show_record_num); // 显示行高度
+var new_li_blink = null; // 
+// console.log(config);
+$('#ul-panel li').css({
+    'height': li_height + 'px',
+    'line-height': li_height + 'px'
+}); //
+// $('#ul-panel li p').css({'height': li_height+'px', 'line-height': li_height+'px'});
+</script>
+
+<script>
+// 连接服务端，workerman.net:2120换成实际部署web-msg-sender服务的域名或者ip
+var socket = io(config.host);
+// uid可以是自己网站的用户id，以便针对uid推送以及统计在线人数
+// socket连接后以uid登录
+socket.on('connect', function(e) {
+
+    console.log(e);
+    socket.emit('login', config.uid);
+});
+// 后端推送来消息时
+socket.on('new_msg', function(msg) {
+
+    //判断是否已叫过号 
+    var arr = $("#ul-panel li").contents()
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i].textContent === msg) {
+            $("li").eq(i).remove()
+            break
+        }
+    }
+
+    $('#ul-panel li').removeClass('new-li');
+    var html = '<li class="new-li" >' + msg + '</li>';
+    $('#ul-panel').prepend(html);
+    // 设置行高
+    $('#ul-panel li').css({
+        'height': li_height + 'px',
+        'line-height': li_height + 'px'
+    });
+    // 新添加的闪烁
+    flashingTwo('.new-li')
+
+});
+
+// 后端推送来在线数据时
+socket.on('update_online_count', function(online_stat) {
+    console.log(online_stat);
+});
+
+function flashingTwo(el) { //闪烁
+    $(el).fadeOut(700).fadeIn(700).fadeOut(700).fadeIn(700)
+}
+
+</script>
